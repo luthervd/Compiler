@@ -13,21 +13,23 @@ int main()
     string str;
     if(f) {
         ostringstream ss;
-        ss << f.rdbuf(); // reading data
+        ss << f.rdbuf(); // reading datcda
         str = ss.str();
+    }
+    else{
+        cout << "No file found";
     }
     cout<<str<<std::endl;
 
-    std::stack<Token> tokens = tokenzie(str);
+    std::vector<Token> tokens = tokenize(str);
 
-    while(tokens.size() > 0)
+    for(auto &token: tokens)
     {
-        auto element = tokens.top();
-        cout << element.type << ":" << element.value;
+        
+        cout << print_token(token.type) << ":" << token.value;
         cout << std::endl;
-        tokens.pop();
     }
-    cout << "finsihed";
+    cout << "finished";
     cout << std::endl;
     return 0;
 }

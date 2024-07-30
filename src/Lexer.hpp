@@ -1,4 +1,3 @@
-#pragma once
 #include <string>
 #include <stack>
 #include <vector>
@@ -12,7 +11,8 @@ namespace compilerLexer{
             OpenParen,
             CloseParen,
             BinaryOperator,
-
+            Type,
+            Operator
     };
 
     struct Token {
@@ -24,9 +24,11 @@ namespace compilerLexer{
        }
     };
 
-    std::stack<Token> tokenzie(std::string &sourceCode);
+    std::vector<Token> tokenize(std::string &sourceCode);
 
     std::vector<std::string> splitString(const std::string &sourceCode);
 
     bool is_number(std::string value);
+
+    std::string print_token(TokenType& type);
 }
