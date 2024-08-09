@@ -2,10 +2,13 @@
 #include<fstream>
 #include<sstream>
 #include<string>
-#include "Lexer.hpp"
+#include<vector>
+#include "Ast/Parser.hpp"
+#include "Ast/Lexer.hpp"
+#include "Ast/TokenProvider.hpp"
 
 using namespace std;
-using namespace compilerLexer;
+using namespace Ast;
 
 int main()
 {
@@ -20,15 +23,19 @@ int main()
         cout << "No file found";
     }
     cout<<str<<std::endl;
+    
+    Tokenizer tokenizer = Tokenizer();
+    std::vector<Token> tokens = tokenizer.tokenize(str);
+    auto tokenProvider = new TokenProvider(tokens);
+    auto parser = new Parser(tokenProvider);
+    
+    auto result = parser->Parse();
 
-    std::vector<Token> tokens = tokenize(str);
+    cout << result->to_string();
 
-    for(auto &token: tokens)
-    {
-        
-        cout << print_token(token.type) << ":" << token.value;
-        cout << std::endl;
-    }
+    result->~Node();
+
+    delete parser;
     cout << "finished";
     cout << std::endl;
     return 0;

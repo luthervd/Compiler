@@ -6,7 +6,22 @@
 
 using namespace std;
 
-namespace compilerLexer{
+namespace Ast{
+
+    Token::Token(const Token& token){
+        type = token.type;
+        value = token.value;
+    }
+    
+    Token::Token(TokenType type, std::string value){
+        this->type = type;
+        this->value = value;
+    }
+
+    std::string Token::to_string(){
+        auto type = print_token(this->type);
+        return type + ":" + this->value;
+    }
 
     const unordered_set<char> ReservedOpChar = {
         ';', '(', ')', '=', '+', '/', '*', '<', '>'
@@ -27,8 +42,6 @@ namespace compilerLexer{
     const unordered_set<string> FundamentalTypes = {
         "int","double","char","float","bool", "for", "while"
     };
-
-    
 
      std::vector<std::string> splitString(const std::string &sourceCode) {
         std::vector<std::string> words;
@@ -90,7 +103,19 @@ namespace compilerLexer{
         return true;
     }
 
-    std::vector<Token> tokenize(std::string &sourceCode){
+    Tokenizer::Tokenizer(){
+      this->_binaryMap = map<string, Token>
+      {
+        {"+",Token(TokenType::BinaryPlus, "+")},
+        {"-",Token(TokenType::BinaryMinus, "-")},
+        {"/",Token(TokenType::BinaryDivision, "/")},
+        {"*",Token(TokenType::BinaryMultiply, "*")},
+        {"++",Token(TokenType::BinaryPlusPlus, "++")},
+        {"--",Token(TokenType::BinaryMinusMinus, "--")},
+      };
+    };
+
+    std::vector<Token> Tokenizer::tokenize(std::string &sourceCode){
         std::vector<Token> tokens;
         std::vector<std::string> src = splitString(sourceCode);
 
@@ -110,7 +135,15 @@ namespace compilerLexer{
             }
             else if(value.size() == 1 && ReservedOpChar.find(value[0]) != ReservedOpChar.end())
             {
-                tokens.push_back(Token(TokenType::Operator, value));
+                auto binary = _binaryMap.find(value);
+                if(binary != _binaryMap.end())
+                {
+                    Token token = binary->second;
+                    tokens.push_back(token);
+                }
+                else{
+                  tokens.push_back(Token(TokenType::Operator, value));
+                }  
             }
             else if(ReservedOpString.find(value) != ReservedOpString.end())
             {
@@ -121,14 +154,22 @@ namespace compilerLexer{
                 tokens.push_back(Token(TokenType::Identifier, value));
             }
         }
+        tokens.push_back(Token(TokenType::EOL,""));
         return tokens;
+        
     }
 
     string print_token(TokenType& tokenType)
     {
         switch (tokenType)
         {
-            case TokenType::BinaryOperator : return "BinaryOperator";
+            case TokenType::BinaryPlus : 
+            case TokenType::BinaryPlusPlus :
+            case TokenType::BinaryDivision :
+            case TokenType::BinaryMinus :
+            case TokenType::BinaryMinusMinus :
+            case TokenType::BinaryMultiply :
+            return "BinaryOperator";
             case TokenType::CloseParen :
             case TokenType::OpenParen : return "Paren";
             case TokenType::Equals : return "Equals";
@@ -136,6 +177,8 @@ namespace compilerLexer{
             case TokenType::Number : return "Number";
             case TokenType::Identifier : return "ID";
             case TokenType::Operator : return "Operator";
+            case TokenType::Program : return "Program";
+            case TokenType::EOL : return "End of File";
             default:
             return "UNDEFINED";
         };
