@@ -3,6 +3,8 @@
 namespace Ast{
 
 
+    BinaryExpression::BinaryExpression() : Node(){}
+
     BinaryExpression::BinaryExpression(Node* parent) : Node(parent){
     }
     

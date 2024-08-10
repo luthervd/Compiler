@@ -24,7 +24,7 @@ namespace Ast{
     }
 
     const unordered_set<char> ReservedOpChar = {
-        ';', '(', ')', '=', '+', '/', '*', '<', '>'
+        ';', '(', ')', '=', '+', '-', '/', '*', '<', '>'
     };
 
     const unordered_set<string> ReservedOpString = {

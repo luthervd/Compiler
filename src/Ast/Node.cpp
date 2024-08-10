@@ -10,6 +10,7 @@ namespace Ast{
 
     Node::Node(Node* node) {
         Parent = node;
+        Parent->addChild(this);
         Children = vector<Node*>();
     }
 

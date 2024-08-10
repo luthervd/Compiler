@@ -7,6 +7,7 @@ namespace Ast{
         Node* Left;
         Node* Right;
         Node* Op;
+        BinaryExpression();
         BinaryExpression(Node* parent);
         string to_string();
         string value();

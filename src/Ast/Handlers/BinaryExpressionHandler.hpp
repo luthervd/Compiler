@@ -9,7 +9,5 @@ namespace Ast{
     class BinaryExpressionHandler : public Handler{
         public:
            Node* Handle(Node* parent, TokenProvider* tokenProvider,  HandlerProvider* provider);
-        private:
-           Node* BuildOut(BinaryExpression* parentExpression, TokenProvider* tokenProvider,  HandlerProvider* provider);
     };
 }

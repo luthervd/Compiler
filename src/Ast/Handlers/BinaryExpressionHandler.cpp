@@ -4,60 +4,32 @@
 namespace Ast{
     Node* BinaryExpressionHandler::Handle(Node* parent, TokenProvider* tokenProvider,  HandlerProvider* provider)
     {
-        auto result = new BinaryExpression(parent);
-        while(tokenProvider->hasNext())
-        {
-            Token token = tokenProvider->peek();
-            //TODO make semicolon token type
-            while(token.value != ";")
-            {
-                if(token.type == TokenType::Number)
-                {
-                  //TODO need better checking to make sure we dont read end of tokens
-                  //Also is the right an id etc etc
-                  auto numberHandler = provider->GetHandler(HandlerType::NumericLiteral);
-                  auto opHandler = provider->GetHandler(HandlerType::BinaryOperator);
-                  result->Left = numberHandler->Handle(result, tokenProvider, provider);
-                  result->Op = opHandler->Handle(result, tokenProvider, provider);;
-                  result->Right = numberHandler->Handle(result, tokenProvider, provider);
-                  parent->addChild(result);
-                }
-                else
-                {
-                   return this->BuildOut(result, tokenProvider, provider);
-                }
-                token = tokenProvider->peek();
-            }
-            //Eat the semi-colon
-            tokenProvider->next();
-
+        auto result = new BinaryExpression();
+        auto numberHandler = provider->GetHandler(HandlerType::NumericLiteral);
+        auto opHandler = provider->GetHandler(HandlerType::BinaryOperator);
+        auto left = numberHandler ->Handle(result, tokenProvider, provider);
+        auto op = opHandler->Handle(result, tokenProvider, provider);
+        auto right = numberHandler->Handle(result, tokenProvider, provider);
+        result->Left = left;
+        result->Op = op;
+        result->Right = right;
+        auto peeked = tokenProvider->peek();
+        BinaryExpression* finalResult;
+        while(peeked.type == TokenType::BinaryPlus || peeked.type == TokenType::BinaryMinus){
+             finalResult = new BinaryExpression();
+             auto nextOp = opHandler->Handle(finalResult, tokenProvider, provider);
+             auto nextRight = numberHandler->Handle(finalResult, tokenProvider, provider);
+             result->Parent = finalResult;
+             finalResult->addChild(result);
+             finalResult->Left = result;
+             finalResult->Right = nextRight;
+             finalResult->Op = nextOp;
+             result = finalResult;
+             peeked = tokenProvider->peek();
         }
+        result->Parent = parent;
+        parent->addChild(result);
+        tokenProvider->next();
         return result;
-    }
-
-    Node* BinaryExpressionHandler::BuildOut(BinaryExpression* parent, TokenProvider* tokenProvider,  HandlerProvider* provider)
-    {
-        auto result = new BinaryExpression(parent);
-        if(tokenProvider->hasNext())
-        {
-            auto numberHandler = provider->GetHandler(HandlerType::NumericLiteral);
-            auto opHandler = provider->GetHandler(HandlerType::BinaryOperator);
-            Token token = tokenProvider->peek();
-            //TODO make semicolon token type
-            if(token.value != ";")
-            {
-                result->Left = parent;
-                result->Op = opHandler->Handle(result, tokenProvider, provider);;
-                result->Right = numberHandler->Handle(result, tokenProvider, provider);
-                parent->addChild(result);
-                return BuildOut(result, tokenProvider, provider);
-            }
-            else{
-                  return result;
-            }
-
-        }
-        return result;
-      
     }
 }
