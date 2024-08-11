@@ -21,9 +21,7 @@ int main()
     }
     else{
         cout << "No file found";
-    }
-    cout<<str<<std::endl;
-    
+    }    
     Tokenizer tokenizer = Tokenizer();
     std::vector<Token> tokens = tokenizer.tokenize(str);
     auto tokenProvider = new TokenProvider(tokens);

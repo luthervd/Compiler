@@ -11,6 +11,7 @@ namespace Ast{
       enum TokenType {
             Program,
             Number,
+            String,
             Identifier,
             Equals,
             OpenParen,

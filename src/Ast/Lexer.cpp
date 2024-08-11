@@ -20,7 +20,7 @@ namespace Ast{
 
     std::string Token::to_string(){
         auto type = print_token(this->type);
-        return type + ":" + this->value;
+        return type + " : " + this->value;
     }
 
     const unordered_set<char> ReservedOpChar = {
@@ -51,11 +51,10 @@ namespace Ast{
             
             char ch = sourceCode[i];
            
-            //is it a terminator
+            //If not a terminator then handle
             if (Terminators.find(ch) == Terminators.end()) {
 
-                // Check for reserved symbol
-                if(ReservedOpChar.find(ch) != ReservedOpChar.end()) {
+                 if(ReservedOpChar.find(ch) != ReservedOpChar.end()) {
 
                     //Clear the buffered word
                     if(word.length() > 0){
@@ -149,6 +148,9 @@ namespace Ast{
             {
                 tokens.push_back(Token(TokenType::Operator, value));
             }
+            else if(value[0] == '"'){
+                tokens.push_back(Token(TokenType::String, value));
+            }
             else
             {
                 tokens.push_back(Token(TokenType::Identifier, value));
@@ -179,6 +181,7 @@ namespace Ast{
             case TokenType::Operator : return "Operator";
             case TokenType::Program : return "Program";
             case TokenType::EOL : return "End of File";
+            case TokenType::String : return "String";
             default:
             return "UNDEFINED";
         };

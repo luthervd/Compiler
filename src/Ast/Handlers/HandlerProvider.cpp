@@ -2,6 +2,7 @@
 #include "BinaryExpressionHandler.hpp"
 #include "BinaryOperatorHandler.hpp"
 #include "NumericLiteralHandler.hpp"
+#include "StringLiteralHandler.hpp"
 
 namespace Ast{
     HandlerProvider::HandlerProvider() {
@@ -9,7 +10,8 @@ namespace Ast{
         {
             {HandlerType::BinaryExpressionStatement, new BinaryExpressionHandler()},
             {HandlerType::BinaryOperator, new BinaryOperatorHandler()},
-            {HandlerType::NumericLiteral, new NumericLiteralHandler()}
+            {HandlerType::NumericLiteral, new NumericLiteralHandler()},
+            {HandlerType::StringLiteral, new StringLiteralHandler()}
         };
     }
     

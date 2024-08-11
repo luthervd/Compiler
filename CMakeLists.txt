@@ -14,4 +14,5 @@ add_executable(compiler
     src/Ast/Handlers/BinaryOperatorHandler.cpp
     src/Ast/Handlers/HandlerProvider.cpp
     src/Ast/handlers/NumericLiteralHandler.cpp
-    src/Ast/Handlers/BinaryExpressionHandler.cpp)
+    src/Ast/Handlers/BinaryExpressionHandler.cpp
+    src/Ast/Handlers/StringLiteralHandler.cpp)

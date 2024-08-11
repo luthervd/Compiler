@@ -28,8 +28,23 @@ namespace Ast {
     Node* Parser::parseExpressionStatement(Node* parent)
     {
         //TODO workout expression statement type
-        auto binaryHandler = _handlerProvider->GetHandler(HandlerType::BinaryExpressionStatement);
-        return binaryHandler->Handle(parent, _tokenProvider, _handlerProvider);
+        auto peeked = _tokenProvider->peek();
+        
+        //TODO map token to handler type so we dont need switch
+        Handler* handler = nullptr;
+        switch(peeked.type){
+            case TokenType::String:
+              handler = _handlerProvider->GetHandler(HandlerType::StringLiteral);
+              break;
+            case TokenType::Number:
+              handler = _handlerProvider->GetHandler(HandlerType::BinaryExpressionStatement);
+              break;
+        }
+        if(handler == nullptr)
+        {
+            return nullptr;
+        }
+        return handler->Handle(parent, _tokenProvider, _handlerProvider);
     }
 
     Node* Parser::parseStatement(Node* parent){
