@@ -36,7 +36,7 @@ namespace Ast {
             case TokenType::String:
               handler = _handlerProvider->GetHandler(HandlerType::StringLiteral);
               break;
-            case TokenType::Number:
+            default:
               handler = _handlerProvider->GetHandler(HandlerType::BinaryExpressionStatement);
               break;
         }

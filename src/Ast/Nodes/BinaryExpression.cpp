@@ -12,14 +12,14 @@ namespace Ast{
     string BinaryExpression::to_string()
     {
         string result = "Binary expression : ";
-        result += Left->value() + " " + Op->value() + " " + Right->value();
+        result += "Left : " + Left->value() + " Operator : " +  Op->value() + " Right Value: " + Right->value();
         result += "\n\r";
         return result;
     }
 
     string BinaryExpression::value()
     {
-       return Left->value() + " " + Op->value() + " " + Right->value();
+       return "Left : " + Left->value() + " Operator : " +  Op->value() + " Right Value: " + Right->value();
     }
 
 }

@@ -3,11 +3,11 @@
 
 namespace Ast{
 
-    Node* StringLiteralHandler::Handle(Node* parent, TokenProvider* tokenProvider, HandlerProvider* provider)
+    Node* StringLiteralHandler::Handle(Node* parent, TokenProvider* tProvider, HandlerProvider* hProvider)
     {
-        if(tokenProvider->hasNext() && tokenProvider->peek().type == TokenType::String)
+        if(tProvider->hasNext() && tProvider->peek().type == TokenType::String)
         {
-            auto token = tokenProvider->next();
+            auto token = tProvider->next();
             string cleansed;
             for(int i = 1; i < token.value.size()-1;i++)
             {
@@ -15,6 +15,7 @@ namespace Ast{
             }
             token.value = cleansed;
             auto lit = new TokenNode(token, parent);
+            auto delim = tProvider->next();
             return lit;
         }
         else return NULL;
