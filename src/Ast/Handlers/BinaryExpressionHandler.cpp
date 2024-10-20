@@ -1,23 +1,17 @@
 #include "BinaryExpressionHandler.hpp"
 
-// 2 + 2
-
-// 2 + 2 - 2 
-
-// 2 + 2 * 2
 namespace Ast{
-    Node* BinaryExpressionHandler::Handle(Node* parent, TokenProvider* tProvider,  HandlerProvider* hProvider)
+    shared_ptr<Node> BinaryExpressionHandler::Handle(shared_ptr<Node> parent, shared_ptr<TokenProvider> tProvider,  shared_ptr<HandlerProvider> hProvider)
     {
-        auto result = new BinaryExpression();
-
+        auto result = make_shared<BinaryExpression>();
         result->Left = this->HandleLeft(result, tProvider, hProvider);
         auto rightResponse = this->HandleRight(result, tProvider, hProvider);
         result->Op = rightResponse.OpResult;
         result->Right = rightResponse.RightNode;
         auto peeked = tProvider->peek();
-        BinaryExpression* finalResult;
-        while(peeked.type == TokenType::BinaryPlus || peeked.type == TokenType::BinaryMinus){
-             finalResult = new BinaryExpression();
+        shared_ptr<BinaryExpression> finalResult;
+        while(peeked.type == TokenType::BinaryPlus || peeked.type == TokenType::BinaryMinus || peeked.type == TokenType::BinaryMultiply || peeked.type == TokenType::BinaryDivision){
+             finalResult = make_shared<BinaryExpression>();
              result->Parent = finalResult;
              finalResult->addChild(result);
              finalResult->Left = result;
@@ -29,39 +23,31 @@ namespace Ast{
         }
         result->Parent = parent;
         parent->addChild(result);
-        tProvider->next();
+        if(tProvider->peek().type == TokenType::EndStatement){
+            auto eaten = tProvider->next();
+        }
         return result;
     }
 
  
-    Node* BinaryExpressionHandler::HandleLeft(Node* parent, TokenProvider* tProvider, HandlerProvider* hProvider)
+    shared_ptr<Node> BinaryExpressionHandler::HandleLeft(shared_ptr<Node> parent, shared_ptr<TokenProvider> tProvider, shared_ptr<HandlerProvider> hProvider)
     {
         auto numberHandler = hProvider->GetHandler(HandlerType::NumericLiteral);
         auto peeked = tProvider->peek();
         if(peeked.type == TokenType::OpenParen)
         {
-            //TODO this needs to handle any expression so just call Binary handle again
+            auto binaryHandler = hProvider->GetHandler(HandlerType::BinaryExpressionStatement);
             auto eatenParam = tProvider->next();
-            auto result = new BinaryExpression();
-            auto opHandler = hProvider->GetHandler(HandlerType::BinaryOperator);
-            auto left = numberHandler->Handle(result, tProvider, hProvider);
-            auto op = opHandler->Handle(result, tProvider, hProvider);
-            auto right = numberHandler->Handle(result, tProvider, hProvider);
-            result->Left = left;
-            result->Op = op;
-            result->Right = right;
-
-            // TODO Error handling
+            auto expression = binaryHandler->Handle(parent, tProvider, hProvider);
             auto eatenClose = tProvider->next();
-            return result;
-
+            return expression;
         }
         else{
             return numberHandler->Handle(parent, tProvider, hProvider);
         }
     }
 
-    RightResponse BinaryExpressionHandler::HandleRight(Node* parent, TokenProvider* tProvider, HandlerProvider* hProvider)
+    RightResponse BinaryExpressionHandler::HandleRight(shared_ptr<Node> parent, shared_ptr<TokenProvider> tProvider, shared_ptr<HandlerProvider> hProvider)
     {
         auto response = RightResponse();
                 
@@ -70,24 +56,18 @@ namespace Ast{
         auto op = opHandler->Handle(parent, tProvider, hProvider);
         response.OpResult = op;
 
-        //RIGHT - is it an expression?
-        auto numberHandler = hProvider->GetHandler(HandlerType::NumericLiteral);
-        auto rightNum = numberHandler->Handle(parent, tProvider, hProvider);
-        auto peeked = tProvider->peek();
-        
-        //TODO include division also
-        if(peeked.type == TokenType::BinaryMultiply)
+       auto peeked = tProvider->peek();
+       if(peeked.type == TokenType::OpenParen)
         {
-            auto mult = opHandler->Handle(parent, tProvider, hProvider);
-            auto num = numberHandler->Handle(parent, tProvider, hProvider);
-            auto binaryExpression = new BinaryExpression();
-            binaryExpression->Left = rightNum;
-            binaryExpression->Op = mult;
-            binaryExpression->Right = num;
-            response.RightNode = binaryExpression;
+            auto binaryHandler = hProvider->GetHandler(HandlerType::BinaryExpressionStatement);
+            auto eatenParam = tProvider->next();
+            auto expression = binaryHandler->Handle(parent, tProvider, hProvider);
+            auto eatenClose = tProvider->next();
+            response.RightNode = expression;
         }
         else{
-           response.RightNode = rightNum;
+            auto numberHandler = hProvider->GetHandler(HandlerType::NumericLiteral);
+            response.RightNode = numberHandler->Handle(parent, tProvider, hProvider);
         }
         return response;
     }

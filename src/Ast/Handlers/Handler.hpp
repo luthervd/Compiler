@@ -1,5 +1,5 @@
 #pragma once
-#include "../Node.hpp"
+#include "../Nodes/Node.hpp"
 #include "../TokenProvider.hpp"
 #include <map>
 #include "HandlerType.hpp"
@@ -10,7 +10,7 @@ namespace Ast{
     
     class Handler{
         public:
-           virtual Node* Handle(Node* parent, TokenProvider* tokenProvider, HandlerProvider* provider) = 0;
+           virtual shared_ptr<Node> Handle(shared_ptr<Node> parent, shared_ptr<TokenProvider> tokenProvider, shared_ptr<HandlerProvider> provider) = 0;
     };
 
 }

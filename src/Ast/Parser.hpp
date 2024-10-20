@@ -1,5 +1,5 @@
 #pragma once
-#include "Node.hpp"
+#include "Nodes/Node.hpp"
 #include <vector>
 #include <tuple>
 #include <map>
@@ -17,17 +17,15 @@ namespace Ast{
 
   class Parser{
     public:
-      Parser(TokenProvider* tokenProvider);
-      ~Parser();
-      Node* Parse();
-      string to_string();
+      Parser(shared_ptr<TokenProvider> tokenProvider);
+      shared_ptr<Node> Parse();
       
     private: 
-      TokenProvider* _tokenProvider;
-      HandlerProvider* _handlerProvider;
-      Node* parseStatement(Node* parent);
-      Node* parseExpression(Node* parent);
-      Node* parseExpressionStatement(Node* parent);
+      shared_ptr<TokenProvider> _tokenProvider;
+      shared_ptr<HandlerProvider> _handlerProvider;
+      shared_ptr<Node> parseStatement(shared_ptr<Node> parent);
+      shared_ptr<Node> parseExpression(shared_ptr<Node> parent);
+      shared_ptr<Node> parseExpressionStatement(shared_ptr<Node> parent);
   };
 
 }

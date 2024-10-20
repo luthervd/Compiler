@@ -1,22 +1,16 @@
 #pragma once
-#include "Handler.hpp"
-#include "HandlerProvider.hpp"
+#include "ExpressionHandler.hpp"
 #include "../Nodes/BinaryExpression.hpp"
 
 
 namespace Ast{
 
-     struct RightResponse {
-             Node* OpResult;
-             Node* RightNode;
-     };
-
-    class BinaryExpressionHandler : public Handler{
-        public:
-           Node* Handle(Node* parent, TokenProvider* tokenProvider,  HandlerProvider* provider);
+    class BinaryExpressionHandler : public ExpressionHandler{
+         public:
+            shared_ptr<Node> Handle(shared_ptr<Node> parent, shared_ptr<TokenProvider> tokenProvider,  shared_ptr<HandlerProvider> provider);
         private:
-           Node* HandleLeft(Node* parent, TokenProvider* tProvider, HandlerProvider* hProvider);
-           RightResponse HandleRight(Node* parent, TokenProvider* tProvider, HandlerProvider* hProvider);
+            shared_ptr<Node> HandleLeft(shared_ptr<Node> parent, shared_ptr<TokenProvider> tProvider, shared_ptr<HandlerProvider> hProvider);
+            RightResponse HandleRight(shared_ptr<Node> parent, shared_ptr<TokenProvider> tProvider, shared_ptr<HandlerProvider> hProvider);
     };
 
     

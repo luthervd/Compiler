@@ -5,7 +5,7 @@ namespace Ast{
     TokenNode::TokenNode(Token& t): Node(), token(t){
     }
 
-    TokenNode::TokenNode(Token& t, Node* parent): Node(parent), token(t){
+    TokenNode::TokenNode(Token& t, shared_ptr<Node> parent): Node(parent), token(t){
     }
 
     string TokenNode::to_string(){

@@ -5,6 +5,6 @@
 namespace Ast{
 
     class BinaryOperatorHandler : public Handler{
-        Node* Handle(Node* parent, TokenProvider* tokenProvider, HandlerProvider* provider);
+        shared_ptr<Node> Handle(shared_ptr<Node> parent, shared_ptr<TokenProvider> tokenProvider, shared_ptr<HandlerProvider> provider);
     };
 }

@@ -4,40 +4,40 @@
 // E -> T { +|- } | T
 namespace Ast {
     
-    Parser::Parser(TokenProvider* tokenProvider)
+    Parser::Parser(shared_ptr<TokenProvider> tokenProvider)
     { 
         _tokenProvider = tokenProvider;
-        _handlerProvider = new HandlerProvider();
+        _handlerProvider = make_shared<HandlerProvider>();
     }
 
-    Parser::~Parser()
-    {
-     
-    }
-
-    Node* Parser::Parse(){
+    shared_ptr<Node> Parser::Parse(){
         Token token = Token(TokenType::Program , "");
-        TokenNode* program = new TokenNode(token);
+        auto program = make_shared<TokenNode>(token);
         while(_tokenProvider->hasNext())
         {
-            parseExpressionStatement(program);
+            parseStatement(program);
         }
         return program;
     }
 
-    Node* Parser::parseExpressionStatement(Node* parent)
+    shared_ptr<Node> Parser::parseStatement(shared_ptr<Node> parent)
     {
-        //TODO workout expression statement type
         auto peeked = _tokenProvider->peek();
-        
-        //TODO map token to handler type so we dont need switch
-        Handler* handler = nullptr;
+        shared_ptr<Handler> handler = nullptr;
         switch(peeked.type){
-            case TokenType::String:
-              handler = _handlerProvider->GetHandler(HandlerType::StringLiteral);
+            case TokenType::EndStatement:
+            {
+              auto token = _tokenProvider->next();
+              return make_shared<TokenNode>(token, parent);
+            }
+            case TokenType::BlockStatementStart:
+              handler = _handlerProvider->GetHandler(HandlerType::BlockStatement);
+              break;
+            case TokenType::Type:
+              handler = _handlerProvider->GetHandler(HandlerType::Variable);
               break;
             default:
-              handler = _handlerProvider->GetHandler(HandlerType::BinaryExpressionStatement);
+              handler = _handlerProvider->GetHandler(HandlerType::ExpressionRoot);
               break;
         }
         if(handler == nullptr)
@@ -45,17 +45,6 @@ namespace Ast {
             return nullptr;
         }
         return handler->Handle(parent, _tokenProvider, _handlerProvider);
-    }
-
-    Node* Parser::parseStatement(Node* parent){
-        //TODO more here 
-        return parseExpression(parent);
-    }
-
-    Node* Parser::parseExpression(Node* parent)
-    {
-       //TODO workout expression type;
-       return parseExpressionStatement(parent);
     }
 
 }

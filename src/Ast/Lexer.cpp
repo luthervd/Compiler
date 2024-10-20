@@ -24,7 +24,7 @@ namespace Ast{
     }
 
     const unordered_set<char> ReservedOpChar = {
-        ';', '(', ')', '=', '+', '-', '/', '*', '<', '>'
+        ';', '(', ')', '=', '+', '-', '/', '*', '<', '>', '{', '}'
     };
 
     const unordered_set<string> ReservedOpString = {
@@ -39,8 +39,8 @@ namespace Ast{
         ' ','\n','\r'
     };
 
-    const unordered_set<string> FundamentalTypes = {
-        "int","double","char","float","bool", "for", "while"
+    const unordered_set<string> AssignmentTypes = {
+        "var"
     };
 
      std::vector<std::string> splitString(const std::string &sourceCode) {
@@ -128,7 +128,7 @@ namespace Ast{
             else if(is_number(value)){
                 tokens.push_back(Token(TokenType::Number, value));
             }
-            else if(FundamentalTypes.find(value) != FundamentalTypes.end())
+            else if(AssignmentTypes.find(value) != AssignmentTypes.end())
             {
                 tokens.push_back(Token(TokenType::Type, value));
             }
@@ -141,7 +141,18 @@ namespace Ast{
                     tokens.push_back(token);
                 }
                 else{
-                  tokens.push_back(Token(TokenType::Operator, value));
+                  if(value[0] == '{'){
+                    tokens.push_back(Token(TokenType::BlockStatementStart, value));
+                  }
+                  else if(value[0] == '}'){
+                    tokens.push_back(Token(TokenType::BlockStatementEnd, value));
+                  }
+                  else if(value[0] == ';'){
+                    tokens.push_back(Token(TokenType::EndStatement, value));
+                  }
+                  else{
+                    tokens.push_back(Token(TokenType::Operator, value));
+                  }
                 }  
             }
             else if(ReservedOpString.find(value) != ReservedOpString.end())

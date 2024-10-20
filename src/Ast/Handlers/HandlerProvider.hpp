@@ -1,5 +1,5 @@
 #pragma once
-#include "../Node.hpp"
+#include "../Nodes/Node.hpp"
 #include "../TokenProvider.hpp"
 #include <map>
 #include "HandlerType.hpp"
@@ -11,8 +11,8 @@ namespace Ast{
     class HandlerProvider{
         public:
             HandlerProvider();
-            Handler* GetHandler(HandlerType type);
+            shared_ptr<Handler> GetHandler(HandlerType type);
         private:
-            std::map<HandlerType, Handler*> _handlers;
+            std::map<HandlerType, shared_ptr<Handler>> _handlers;
     };  
 }

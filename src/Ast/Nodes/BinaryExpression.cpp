@@ -3,9 +3,9 @@
 namespace Ast{
 
 
-    BinaryExpression::BinaryExpression() : Node(){}
+    BinaryExpression::BinaryExpression() : Expression(){}
 
-    BinaryExpression::BinaryExpression(Node* parent) : Node(parent){
+    BinaryExpression::BinaryExpression(shared_ptr<Node> parent) : Expression(parent){
     }
     
 

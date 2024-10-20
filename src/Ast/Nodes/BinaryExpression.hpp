@@ -1,14 +1,11 @@
 #pragma once
-#include "../Node.hpp"
+#include "Expression.hpp"
 
 namespace Ast{
 
-    struct BinaryExpression: Node{
-        Node* Left;
-        Node* Right;
-        Node* Op;
+    struct BinaryExpression: public Expression{
         BinaryExpression();
-        BinaryExpression(Node* parent);
+        BinaryExpression(shared_ptr<Node> parent);
         string to_string();
         string value();
     };

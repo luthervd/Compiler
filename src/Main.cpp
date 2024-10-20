@@ -24,16 +24,12 @@ int main()
     }    
     Tokenizer tokenizer = Tokenizer();
     std::vector<Token> tokens = tokenizer.tokenize(str);
-    auto tokenProvider = new TokenProvider(tokens);
-    auto parser = new Parser(tokenProvider);
+    auto tokenProvider = make_shared<TokenProvider>(tokens);
+    auto parser = make_shared<Parser>(tokenProvider);
     
     auto result = parser->Parse();
 
     cout << result->to_string();
-
-    result->~Node();
-
-    delete parser;
     cout << "finished";
     cout << std::endl;
     return 0;

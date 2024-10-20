@@ -26,6 +26,8 @@ namespace Ast{
             Operator,
             EndStatement,
             EOL,
+            BlockStatementStart,
+            BlockStatementEnd,
             None
     };
 

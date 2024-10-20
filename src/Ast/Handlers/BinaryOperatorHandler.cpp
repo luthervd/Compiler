@@ -3,11 +3,12 @@
 
 namespace Ast{
 
-    Node* BinaryOperatorHandler::Handle(Node* parent, TokenProvider* tokenProvider, HandlerProvider* handlerProvider)
+    shared_ptr<Node> BinaryOperatorHandler::Handle(shared_ptr<Node> parent, shared_ptr<TokenProvider> tokenProvider, shared_ptr<HandlerProvider> handlerProvider)
     {
           if(tokenProvider->hasNext()){
             auto t = tokenProvider->next();
-            return new TokenNode(t, parent);
+            auto node =  make_shared<TokenNode>(t, parent);
+            return node;
         }
         else return NULL;
     }

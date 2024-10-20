@@ -3,7 +3,7 @@
 
 namespace Ast{
 
-    Node* StringLiteralHandler::Handle(Node* parent, TokenProvider* tProvider, HandlerProvider* hProvider)
+    shared_ptr<Node> StringLiteralHandler::Handle(shared_ptr<Node> parent, shared_ptr<TokenProvider> tProvider, shared_ptr<HandlerProvider> hProvider)
     {
         if(tProvider->hasNext() && tProvider->peek().type == TokenType::String)
         {
@@ -14,7 +14,7 @@ namespace Ast{
                 cleansed += token.value[i];
             }
             token.value = cleansed;
-            auto lit = new TokenNode(token, parent);
+            auto lit = make_shared<TokenNode>(token, parent);
             auto delim = tProvider->next();
             return lit;
         }

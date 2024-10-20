@@ -1,7 +1,7 @@
 #include "./NumericLiteralNode.hpp"
 
 namespace Ast{
-    NumericLiteralNode::NumericLiteralNode(Token& token, Node* parent): token(token), Node(parent){
+    NumericLiteralNode::NumericLiteralNode(Token& token, shared_ptr<Node> parent): token(token), Node(parent){
     }
 
     string NumericLiteralNode::to_string()
