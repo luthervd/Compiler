@@ -24,7 +24,7 @@ namespace Ast{
     }
 
     const unordered_set<char> ReservedOpChar = {
-        ';', '(', ')', '=', '+', '-', '/', '*', '<', '>', '{', '}'
+        '=', '+', '-', '/', '*', '<', '>', ';', '(',')','{','}'
     };
 
     const unordered_set<string> ReservedOpString = {
@@ -125,6 +125,18 @@ namespace Ast{
             else if(value == ")"){
                 tokens.push_back(Token(TokenType::CloseParen, value));
             }
+            else if(value[0] == '{'){
+                tokens.push_back(Token(TokenType::BlockStatementStart, value));
+            }
+            else if(value[0] == '}'){
+                tokens.push_back(Token(TokenType::BlockStatementEnd, value));
+            }
+            else if(value[0] == ';'){
+                tokens.push_back(Token(TokenType::EndStatement, value));
+            }
+            else if(value[0] == '='){
+                tokens.push_back(Token(TokenType::Equals, value));
+            }
             else if(is_number(value)){
                 tokens.push_back(Token(TokenType::Number, value));
             }
@@ -141,19 +153,9 @@ namespace Ast{
                     tokens.push_back(token);
                 }
                 else{
-                  if(value[0] == '{'){
-                    tokens.push_back(Token(TokenType::BlockStatementStart, value));
-                  }
-                  else if(value[0] == '}'){
-                    tokens.push_back(Token(TokenType::BlockStatementEnd, value));
-                  }
-                  else if(value[0] == ';'){
-                    tokens.push_back(Token(TokenType::EndStatement, value));
-                  }
-                  else{
-                    tokens.push_back(Token(TokenType::Operator, value));
-                  }
-                }  
+                tokens.push_back(Token(TokenType::Operator, value));
+                }
+                
             }
             else if(ReservedOpString.find(value) != ReservedOpString.end())
             {
@@ -167,7 +169,7 @@ namespace Ast{
                 tokens.push_back(Token(TokenType::Identifier, value));
             }
         }
-        tokens.push_back(Token(TokenType::EOL,""));
+        tokens.push_back(Token(TokenType::EOL,"END OF INPUT"));
         return tokens;
         
     }

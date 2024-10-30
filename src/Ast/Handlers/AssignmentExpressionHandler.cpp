@@ -32,7 +32,7 @@ namespace Ast{
     RightResponse AssignmentExpressionHandler::HandleRight(shared_ptr<Node> parent, shared_ptr<TokenProvider> tProvider, shared_ptr<HandlerProvider> hProvider)
     {
         auto shouldBeEquals = tProvider->next();
-        if(shouldBeEquals.type != TokenType::Operator && shouldBeEquals.value == "=")
+        if(shouldBeEquals.type != TokenType::Equals && shouldBeEquals.value == "=")
         {
             throw std::invalid_argument("Should be Equals");
         }
