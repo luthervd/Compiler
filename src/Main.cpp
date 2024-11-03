@@ -29,7 +29,7 @@ int main()
     
     auto result = parser->Parse();
 
-    cout << result->get_json();
+    cout << *result->get_json();
     cout << "finished";
     cout << std::endl;
     return 0;
