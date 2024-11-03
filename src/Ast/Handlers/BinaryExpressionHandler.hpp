@@ -1,6 +1,6 @@
 #pragma once
 #include "ExpressionHandler.hpp"
-#include "../Nodes/BinaryExpression.hpp"
+#include "../Nodes/ExpressionNode.hpp"
 
 
 namespace Ast{

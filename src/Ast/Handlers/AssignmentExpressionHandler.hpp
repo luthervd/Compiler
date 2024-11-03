@@ -1,7 +1,8 @@
 #pragma once
 #include "ExpressionHandler.hpp"
-#include "../Nodes/AssignmentExpressionNode.hpp"
+#include "../Nodes/ExpressionNode.hpp"
 #include "../Nodes/VariableNode.hpp"
+#include "../Nodes/NodeTypes.hpp"
 #include <stdexcept>
 
 namespace Ast{

@@ -18,4 +18,23 @@ namespace Ast{
     {
         return token.value;
     }
+
+    shared_ptr<nlohmann::json> TokenNode::get_json()
+    {
+        json jsonObj;
+        jsonObj["value"] = token.value;
+        auto children = Node::get_json();
+        jsonObj["Children"] = *children;
+        return make_shared<json>(jsonObj);
+    }
+
+    NodeType TokenNode::NType()
+    {
+        switch(token.type){
+            case TokenType::Program:
+               return NodeType::Programn;
+            default:
+               return NodeType::UNDEFINED;
+        }
+    }
 }

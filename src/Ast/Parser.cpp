@@ -1,3 +1,4 @@
+#include <stdexcept>
 #include "Parser.hpp"
 
 
@@ -11,11 +12,12 @@ namespace Ast {
     }
 
     shared_ptr<Node> Parser::Parse(){
-        Token token = Token(TokenType::Program , "");
+        Token token = Token(TokenType::Program , "PROGRAM START");
         auto program = make_shared<TokenNode>(token);
         while(_tokenProvider->hasNext())
         {
-            parseStatement(program);
+            auto child = parseStatement(program);
+            program->addChild(child);
         }
         return program;
     }
@@ -25,24 +27,13 @@ namespace Ast {
         auto peeked = _tokenProvider->peek();
         shared_ptr<Handler> handler = nullptr;
         switch(peeked.type){
-            case TokenType::EndStatement:
-            {
-              auto token = _tokenProvider->next();
-              return make_shared<TokenNode>(token, parent);
-            }
-            case TokenType::BlockStatementStart:
-              handler = _handlerProvider->GetHandler(HandlerType::BlockStatement);
-              break;
             case TokenType::Type:
               handler = _handlerProvider->GetHandler(HandlerType::Variable);
-              break;
-            default:
-              handler = _handlerProvider->GetHandler(HandlerType::ExpressionRoot);
               break;
         }
         if(handler == nullptr)
         {
-            return nullptr;
+            throw std::invalid_argument("No handler found for token " + peeked.to_string());
         }
         return handler->Handle(parent, _tokenProvider, _handlerProvider);
     }

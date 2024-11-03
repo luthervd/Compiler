@@ -5,7 +5,7 @@
 #include <map>
 #include "TokenProvider.hpp"
 #include "Nodes/NumericLiteralNode.hpp"
-#include "Nodes/BinaryExpression.hpp"
+#include "Nodes/ExpressionNode.hpp"
 #include "Nodes/TokenNode.hpp"
 #include "Handlers/Handler.hpp"
 #include "Handlers/HandlerProvider.hpp"

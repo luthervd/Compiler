@@ -40,7 +40,7 @@ namespace Ast{
     };
 
     const unordered_set<string> AssignmentTypes = {
-        "var"
+        "var", "int", "decimal", "boolean", "long"
     };
 
      std::vector<std::string> splitString(const std::string &sourceCode) {

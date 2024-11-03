@@ -1,6 +1,7 @@
 cmake_minimum_required(VERSION 3.17)
 
 project(Compiler)
+include(FetchContent)
 
 enable_testing()
 
@@ -9,16 +10,15 @@ add_library(ast)
 
 target_sources(ast
 PUBLIC
+src/Ast/Serialize.cpp
 src/Ast/Nodes/Node.cpp
 src/Ast/Parser.cpp
 src/Ast/Lexer.cpp
 src/Ast/TokenProvider.cpp
-src/Ast/Nodes/Expression.cpp
-src/Ast/Nodes/BinaryExpression.cpp
+src/Ast/Nodes/ExpressionNode.cpp
 src/Ast/Nodes/NumericLiteralNode.cpp
 src/Ast/Nodes/TokenNode.cpp
 src/Ast/Nodes/VariableNode.cpp
-src/Ast/Nodes/AssignmentExpressionNode.cpp
 src/Ast/Handlers/BinaryOperatorHandler.cpp
 src/Ast/Handlers/HandlerProvider.cpp
 src/Ast/handlers/NumericLiteralHandler.cpp
@@ -28,12 +28,17 @@ src/Ast/Handlers/ExpressionBuilder.cpp
 src/Ast/Handlers/AssignmentExpressionHandler.cpp)
 
 
+FetchContent_Declare(json URL https://github.com/nlohmann/json/releases/download/v3.11.3/json.tar.xz)
+
+FetchContent_MakeAvailable(json)
+
+target_link_libraries(ast PUBLIC nlohmann_json::nlohmann_json)
 #main
 add_executable(compiler src/Main.cpp)
 target_link_libraries(compiler PUBLIC ast)
 
 #test
-include(FetchContent)
+
 FetchContent_Declare(
   googletest
   URL https://github.com/google/googletest/archive/03597a01ee50ed33e9dfd640b249b4be3799d395.zip

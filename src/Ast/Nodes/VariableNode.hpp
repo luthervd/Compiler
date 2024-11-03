@@ -11,6 +11,7 @@ namespace Ast{
         VariableNode(Token& type, Token& id);
         VariableNode(Token& type, Token& id, shared_ptr<Node> parent);
         string to_string();
+        shared_ptr<nlohmann::json> get_json();
         string value();
     };
 }

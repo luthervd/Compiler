@@ -3,15 +3,15 @@
 namespace Ast{
     shared_ptr<Node> BinaryExpressionHandler::Handle(shared_ptr<Node> parent, shared_ptr<TokenProvider> tProvider,  shared_ptr<HandlerProvider> hProvider)
     {
-        auto result = make_shared<BinaryExpression>();
+        auto result = make_shared<ExpressionNode>(parent,ExpressionTypes::BinaryExpression);
         result->Left = this->HandleLeft(result, tProvider, hProvider);
         auto rightResponse = this->HandleRight(result, tProvider, hProvider);
         result->Op = rightResponse.OpResult;
         result->Right = rightResponse.RightNode;
         auto peeked = tProvider->peek();
-        shared_ptr<BinaryExpression> finalResult;
+        shared_ptr<ExpressionNode> finalResult;
         while(peeked.type == TokenType::BinaryPlus || peeked.type == TokenType::BinaryMinus || peeked.type == TokenType::BinaryMultiply || peeked.type == TokenType::BinaryDivision){
-             finalResult = make_shared<BinaryExpression>();
+             finalResult = make_shared<ExpressionNode>(parent,ExpressionTypes::BinaryExpression);
              result->Parent = finalResult;
              finalResult->addChild(result);
              finalResult->Left = result;

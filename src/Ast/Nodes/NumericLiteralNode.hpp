@@ -8,5 +8,6 @@ namespace Ast{
         NumericLiteralNode(Token& token, shared_ptr<Node> parent);
         string to_string();
         string value();
+        shared_ptr<nlohmann::json> get_json();
     };
 }

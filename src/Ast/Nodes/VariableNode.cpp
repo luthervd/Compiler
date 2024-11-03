@@ -14,6 +14,13 @@ namespace Ast{
         return result;
     }
 
+    shared_ptr<nlohmann::json> VariableNode::get_json()
+    {
+        json jsonObj;
+        jsonObj["value"] = id.value();
+        return make_shared<json>(jsonObj);
+    }
+
     string VariableNode::value()
     {
         return id.value();
